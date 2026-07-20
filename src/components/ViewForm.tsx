@@ -13,6 +13,7 @@ const ViewForm: FC = () => {
     selectedFitnessGoal: "",
     allJoinedData: [],
     filteredJoinedData: [],
+    selectedIds: [],
   });
 
   const fitnessGoalList: string[] = [
@@ -55,6 +56,29 @@ const ViewForm: FC = () => {
     }
   };
 
+  const handleDeleteSelected = async () => {
+    try {
+      await Promise.all(
+        state.selectedIds.map((id) => {
+          axios.delete(Messages.URL + id);
+        }),
+      );
+
+      setState((prev) => ({
+        ...prev,
+        allJoinedData: prev.allJoinedData.filter(
+          (item) => !prev.selectedIds.includes(item.id),
+        ),
+        filteredJoinedData: prev.filteredJoinedData.filter(
+          (item) => !prev.selectedIds.includes(item.id),
+        ),
+        selectedIds: [],
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleFilter = (): void => {
     const filteredData = state.selectedFitnessGoal
       ? state.allJoinedData.filter(
@@ -87,6 +111,7 @@ const ViewForm: FC = () => {
     */
 
     event.preventDefault();
+    setState((prev) => ({ ...prev, selectedFitnessGoal: "" }));
 
     axios
       .get<fitnessFormState[]>(Messages.URL)
@@ -145,23 +170,36 @@ const ViewForm: FC = () => {
                         }))
                       }
                     >
-                      <option value="">--Select your Fitness Goal--</option>
+                      <option value="" disabled>
+                        --Select your Fitness Goal--
+                      </option>
                       {fitnessGoalList.map((item) => (
                         <option value={item}>{item}</option>
                       ))}
                     </select>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center mt-2 w-100">
                     <button
-                      className="btn btn-primary mt-2"
+                      className="btn btn-primary"
                       onClick={handleFilter}
                       type="button"
                     >
                       Filter
+                    </button>
+
+                    <button
+                      className="btn btn-danger"
+                      type="button"
+                      onClick={handleDeleteSelected}
+                    >
+                      Delete Selected Items
                     </button>
                   </div>
                   <div className="mt-3 ">
                     <table className="table table-striped custom-table">
                       <thead>
                         <tr>
+                          <th>select</th>
                           <th>JoiningId</th>
                           <th>Name</th>
                           <th>Contact Number</th>
@@ -174,6 +212,26 @@ const ViewForm: FC = () => {
                       <tbody>
                         {state.filteredJoinedData.map((entry, index) => (
                           <tr key={index}>
+                            <td>
+                              <input
+                                type="checkbox"
+                                id="checkboxId"
+                                checked={state.selectedIds.includes(entry.id)}
+                                onChange={(e) => {
+                                  const check = e.target.checked;
+
+                                  setState((prev) => ({
+                                    ...prev,
+                                    selectedIds: check
+                                      ? [...prev.selectedIds, entry.id]
+                                      : prev.selectedIds.filter(
+                                          (id) => id != entry.id,
+                                        ),
+                                  }));
+                                }}
+                                className="form-check-input"
+                              />
+                            </td>
                             <td>{entry.id}</td>
                             <td>{entry.name}</td>
                             <td>{entry.contactNo}</td>

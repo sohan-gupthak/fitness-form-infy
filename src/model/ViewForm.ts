@@ -7,4 +7,5 @@ export interface ViewFormState {
   selectedFitnessGoal: string;
   allJoinedData: fitnessFormState[];
   filteredJoinedData: fitnessFormState[];
+  selectedIds: string[];
 }
