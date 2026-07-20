@@ -1,0 +1,29 @@
+{
+  "fitness-form": [
+    {
+      "joiningId": 1,
+      "name": "Sohan Kukkadapu",
+      "contactNo": "9666112233",
+      "duration": "3",
+      "fitnessGoal": "Muscle Gain",
+      "preferredTime": "Morning",
+      "id": 1
+    },
+    {
+      "name": "Satwick Avula",
+      "contactNo": "9998887772",
+      "duration": "3",
+      "fitnessGoal": "Cardiovascular Health",
+      "preferredTime": "Evening",
+      "id": 2
+    },
+    {
+      "name": "Mohmad Kaja",
+      "contactNo": "9998887775",
+      "duration": "2",
+      "fitnessGoal": "Endurance",
+      "preferredTime": "Morning",
+      "id": 3
+    }
+  ]
+}
